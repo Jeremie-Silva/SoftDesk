@@ -13,6 +13,18 @@ class Contributor(models.Model):
     def username(self):
         return self.user.username
 
+    @property
+    def project_contributions(self):
+        return self.projects.all().count()
+
+    @property
+    def issue_contributions(self):
+        return self.assigned_issues.all().count()
+
+    @property
+    def comments(self):
+        return self.authored_comments.all().count()
+
     def __str__(self):
         return self.username
 
@@ -23,7 +35,7 @@ class Project(models.Model):
     author = models.ForeignKey(
         to=Contributor, on_delete=models.PROTECT, related_name="authored_projects"
     )
-    contributors = models.ManyToManyField(to=Contributor, related_name="projects")
+    contributors = models.ManyToManyField(to=Contributor, related_name="projects_contribution")
     type = models.CharField(max_length=100, blank=True, choices=[
         ("BE", "Back-End"), ("FE", "Front-End"), ("IOS", "iOS"), ("AND", "Android"),
     ])
@@ -41,6 +53,9 @@ class Issue(models.Model):
         to=Contributor, on_delete=models.SET_NULL, related_name="assigned_issues",
         null=True, blank=True
     )
+    author = models.ForeignKey(
+        to=Contributor, on_delete=models.PROTECT, related_name="authored_issues"
+    )
     state = models.CharField(max_length=100, default="TO DO", choices=[
         ("TO DO", "TO DO"), ("In Progress", "In Progress"), ("Finished", "Finished"),
     ])
@@ -53,11 +68,18 @@ class Issue(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"[{self.project}] {self.label} : {self.priority} "
+        return f"[{self.project}] {self.label} : {self.priority}"
 
 
 class Comment(models.Model):
     issue = models.ForeignKey(
         to=Issue, on_delete=models.CASCADE, related_name="comments",
     )
+    author = models.ForeignKey(
+        to=Contributor, on_delete=models.PROTECT, related_name="authored_comments"
+    )
+    description = models.CharField(max_length=3000)
     created_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"[{self.author}] {self.issue}"

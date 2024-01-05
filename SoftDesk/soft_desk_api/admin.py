@@ -4,7 +4,7 @@ from .models import Contributor, Project, Issue, Comment
 
 @register(Contributor)
 class ContributorAdmin(ModelAdmin):
-    list_display = ("username", "age", "can_be_contacted", "can_data_be_shared")
+    list_display = ("username", "age", "project_contributions", "issue_contributions", "comments", "can_be_contacted", "can_data_be_shared")
     fields = ("user", "age", "can_be_contacted")
 
 
@@ -23,10 +23,10 @@ class ProjectAdmin(ModelAdmin):
 @register(Issue)
 class IssueAdmin(ModelAdmin):
     list_display = ("project", "assigned_contributor", "state", "priority", "label")
-    fields = ("project", "assigned_contributor", "state", "priority", "label")
+    fields = ("author", "project", "assigned_contributor", "state", "priority", "label")
 
 
 @register(Comment)
 class CommentAdmin(ModelAdmin):
-    list_display = ("issue",)
-    fields = ("issue",)
+    list_display = ("description", "author", "issue")
+    fields = ("issue", "author", "description")
