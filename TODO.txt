@@ -1,5 +1,6 @@
+Feature : permissions à améliorer
+
 Feature : impossible de créer contributeur de moins de 16 ans
 Feature : posts
-Feature : permissions
 
 api project : type BE à changer avec le nom complet
