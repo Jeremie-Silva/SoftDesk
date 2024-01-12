@@ -5,6 +5,7 @@ Feature : permissions :
   -- tout vérifier mes les posts et delete
 
 
+Issue.assigned_contributor n'apparait pas dans le model de swagger
 Feature : impossible de créer contributeur de moins de 16 ans
 Feature : posts
 

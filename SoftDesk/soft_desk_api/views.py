@@ -43,7 +43,15 @@ class IssueViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, IsContributorOrOwner]
 
     def get_queryset(self):
-        return Issue.objects.filter(project__contributors=self.request.user.contributor)
+        if self.action == "list":
+            return self.request.user.contributor.assigned_issues.all()
+        else:
+            return Issue.objects.filter(id=self.kwargs.get("pk"))
+
+    # def perform_create(self, serializer):
+    #     if self.request.data.get("assigned_contributors"):
+    #         contributor = self.request.data.get("assigned_contributors")
+    #     serializer.save(author=self.request.user.contributor, assigned_contributor=contributor)
 
 
 class CommentViewSet(ModelViewSet):
