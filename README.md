@@ -16,6 +16,7 @@ cd SoftDesk
 ```bash
 virtualenv -p3.12 .venv
 source .venv/bin/activate
+pip install --upgrade setuptools
 pip install -r requirements.txt
 ```
 
