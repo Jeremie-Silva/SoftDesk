@@ -1,4 +1,9 @@
-Feature : permissions à améliorer
+Feature : permissions :
+  permission Issue à finir
+  permission Contributor
+  permission Comment
+  -- tout vérifier mes les posts et delete
+
 
 Feature : impossible de créer contributeur de moins de 16 ans
 Feature : posts
