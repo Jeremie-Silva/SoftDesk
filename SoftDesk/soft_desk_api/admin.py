@@ -10,7 +10,7 @@ class ContributorAdmin(ModelAdmin):
 
 @register(Project)
 class ProjectAdmin(ModelAdmin):
-    list_display = ("name", "author", "type", "display_contributors")
+    list_display = ("name", "author", "type", "display_contributors", "created_time")
     fields = ("name", "author", "type", "contributors")
 
     def display_contributors(self, obj):
@@ -22,11 +22,11 @@ class ProjectAdmin(ModelAdmin):
 
 @register(Issue)
 class IssueAdmin(ModelAdmin):
-    list_display = ("project", "assigned_contributor", "state", "priority", "label")
+    list_display = ("project", "assigned_contributor", "state", "priority", "label", "created_time")
     fields = ("author", "project", "assigned_contributor", "state", "priority", "label")
 
 
 @register(Comment)
 class CommentAdmin(ModelAdmin):
-    list_display = ("description", "author", "issue")
+    list_display = ("description", "author", "issue", "created_time")
     fields = ("issue", "author", "description")

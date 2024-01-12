@@ -15,7 +15,7 @@ class Contributor(models.Model):
 
     @property
     def project_contributions(self):
-        return self.projects.all().count()
+        return self.projects_contribution.all().count()
 
     @property
     def issue_contributions(self):
