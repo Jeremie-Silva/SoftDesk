@@ -4,6 +4,7 @@ Feature : permissions :
   permission Comment
   -- tout vérifier mes les posts et delete
 
+vérifier les models de post dans le swagger
 
 Issue.assigned_contributor n'apparait pas dans le model de swagger
 Feature : impossible de créer contributeur de moins de 16 ans
