@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from .models import Contributor, Project, Issue, Comment
 
@@ -127,25 +128,9 @@ class ProjectSerializer(ModelSerializer):
     def get_issues(self, obj):
         return NestedIssueSerializer(obj.issues.all(), many=True).data
 
-    # def create(self, validated_data):
-    #     # Example: Extract nested project data from validated_data if present
-    #     # projects_data = validated_data.pop('projects_contribution', None)
-    #     #
-    #     # # Create the Contributor instance
-    #     # contributor = Contributor.objects.create(**validated_data)
-    #     #
-    #     # # If there's nested project data, create those projects and link to the contributor
-    #     # if projects_data:
-    #     #     for project_data in projects_data:
-    #     #         # Create or update project instances.
-    #     #         # You might need to handle nested fields within each project separately.
-    #     #         Project.objects.create(contributor=contributor, **project_data)
-    #     print(validated_data)
-    #     return validated_data
-
 
 class IssueSerializer(ModelSerializer):
-    assigned_contributor = SerializerMethodField()
+    assigned_contributor = serializers.PrimaryKeyRelatedField(queryset=Contributor.objects.all())
     author = SerializerMethodField()
     comments = SerializerMethodField()
 
@@ -174,7 +159,7 @@ class IssueSerializer(ModelSerializer):
 
 
 class CommentSerializer(ModelSerializer):
-    issue = SerializerMethodField()
+    issue = serializers.PrimaryKeyRelatedField(queryset=Issue.objects.all())
     author = SerializerMethodField()
 
     class Meta:

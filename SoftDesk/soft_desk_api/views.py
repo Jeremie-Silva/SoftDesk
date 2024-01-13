@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -38,26 +39,45 @@ class ProjectViewSet(ModelViewSet):
 
 
 class IssueViewSet(ModelViewSet):
-    queryset = Issue.objects.all()
+    queryset = Issue.objects.none()  # redefined in get_queryset()
     serializer_class = IssueSerializer
     permission_classes = [IsAuthenticated, IsContributorOrOwner]
 
     def get_queryset(self):
         if self.action == "list":
-            return self.request.user.contributor.assigned_issues.all()
+            assigned_issues: Issue = self.request.user.contributor.assigned_issues.all()
+            authored_issues: Issue = self.request.user.contributor.authored_issues.all()
+            issues: QuerySet = assigned_issues | authored_issues
+            return issues.distinct()
         else:
             return Issue.objects.filter(id=self.kwargs.get("pk"))
 
-    # def perform_create(self, serializer):
-    #     if self.request.data.get("assigned_contributors"):
-    #         contributor = self.request.data.get("assigned_contributors")
-    #     serializer.save(author=self.request.user.contributor, assigned_contributor=contributor)
+    def perform_create(self, serializer):
+        if self.request.data.get("assigned_contributor"):
+            contributor = Contributor.objects.filter(
+                user__username=self.request.data.get("assigned_contributor").strip()
+            ).first()
+        else:
+            contributor = self.request.user.contributor
+        serializer.save(
+            author=self.request.user.contributor,
+            assigned_contributor=contributor
+        )
 
 
 class CommentViewSet(ModelViewSet):
-    queryset = Comment.objects.all()
+    queryset = Comment.objects.none()  # redefined in get_queryset()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsContributorOrOwner]
+
+    def get_queryset(self):
+        if self.action == "list":
+            return self.request.user.contributor.authored_comments.all()
+        else:
+            return Comment.objects.filter(id=self.kwargs.get("pk"))
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user.contributor)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):

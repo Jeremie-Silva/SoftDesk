@@ -10,5 +10,7 @@ class IsContributorOrOwner(BasePermission):
                 return request.user.contributor in obj.contributors.all()
             if isinstance(obj, Issue):
                 return request.user.contributor in obj.project.contributors.all()
+            if isinstance(obj, Comment):
+                return request.user.contributor == obj.author
         else:
             return request.user.contributor == obj.author

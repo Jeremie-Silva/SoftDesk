@@ -22,7 +22,7 @@ class ProjectAdmin(ModelAdmin):
 
 @register(Issue)
 class IssueAdmin(ModelAdmin):
-    list_display = ("project", "assigned_contributor", "state", "priority", "label", "created_time")
+    list_display = ("project", "author", "assigned_contributor", "state", "priority", "label", "created_time")
     fields = ("author", "project", "assigned_contributor", "state", "priority", "label")
 
 
