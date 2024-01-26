@@ -1,6 +1,6 @@
 from drf_yasg.openapi import Response
 from rest_framework.test import APITestCase
-from rest_framework_simplejwt.tokens import RefreshToken, Token
+from rest_framework_simplejwt.tokens import RefreshToken
 from ..models import Contributor, Project
 from django.contrib.auth.models import User
 

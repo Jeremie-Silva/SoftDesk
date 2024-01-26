@@ -1,4 +1,5 @@
-from django.db.models import Model, SET_NULL, CASCADE, PROTECT, ForeignKey, ManyToManyField, OneToOneField, CharField, PositiveSmallIntegerField, BooleanField, DateTimeField
+from django.db.models import Model, SET_NULL, CASCADE, ForeignKey, ManyToManyField, \
+    OneToOneField, CharField, PositiveSmallIntegerField, BooleanField, DateTimeField
 from django.contrib.auth.models import User
 
 
