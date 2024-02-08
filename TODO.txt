@@ -1,13 +1,6 @@
-Feature : permissions :
-  permission Issue à finir
-  permission Contributor
-  permission Comment
-  -- tout vérifier mes les posts et delete
+Tests Comment
+Tests Contributor
 
-vérifier les models de post dans le swagger
+vérifier les models dans le swagger
 
-Issue.assigned_contributor n'apparait pas dans le model de swagger
 Feature : impossible de créer contributeur de moins de 16 ans
-Feature : posts
-
-api project : type BE à changer avec le nom complet
