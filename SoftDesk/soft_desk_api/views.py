@@ -52,18 +52,6 @@ class IssueViewSet(ModelViewSet):
         else:
             return Issue.objects.filter(id=self.kwargs.get("pk"))
 
-    # def perform_create(self, serializer):
-    #     if self.request.data.get("assigned_contributor"):
-    #         contributor = Contributor.objects.filter(
-    #             user__username=self.request.data.get("assigned_contributor").strip()
-    #         ).first()
-    #     else:
-    #         contributor = self.request.user.contributor
-    #     serializer.save(
-    #         author=self.request.user.contributor,
-    #         assigned_contributor=contributor
-    #     )
-
 
 class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.none()  # redefined in get_queryset()
@@ -84,5 +72,4 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         response: dict = super().post(request, *args, **kwargs).data
         response.pop("refresh", None)
-        response["access"] = f"Bearer {response["access"]}"
         return Response(response)

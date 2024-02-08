@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'soft_desk_api',
     'rest_framework',
-    'drf_yasg',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -130,20 +130,18 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
     'DEFAULT_PAGINATION_CLASS': 'soft_desk_api.pagination.CustomLimitOffsetPagination',
     'PAGE_SIZE': 100,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
 }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=4),
 }
 
-SWAGGER_SETTINGS = {
-   'SECURITY_DEFINITIONS': {
-      'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
-      }
-   }
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Soft Desk API',
+    'VERSION': 'v1',
+    'CONTACT': {'email': 'silva.jeremie93@gmail.com'},
+    'PUBLIC': False
 }
 
 LOGIN_URL = '/admin/login/'
