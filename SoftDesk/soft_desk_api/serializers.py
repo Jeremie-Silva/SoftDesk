@@ -3,6 +3,26 @@ from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from .models import Contributor, Project, Issue, Comment
 
 
+class ContributorField(serializers.Field):
+    def to_internal_value(self, data):
+        if isinstance(data, int):  # ID is provided
+            try:
+                return Contributor.objects.get(pk=data)
+            except Contributor.DoesNotExist:
+                raise serializers.ValidationError("Contributor with ID '{}' does not exist.".format(data))
+        elif isinstance(data, str):  # Username is provided
+            try:
+                user = Contributor.objects.get(user__username=data)
+                return user
+            except (Contributor.DoesNotExist, Contributor.DoesNotExist):
+                raise serializers.ValidationError("Contributor with username '{}' does not exist.".format(data))
+        else:
+            raise serializers.ValidationError("Invalid type for 'assigned_contributor'. Expected int (ID) or str (username).")
+
+    def to_representation(self, value):
+        return value.user.username  # Assuming Contributor model has a user field
+
+
 class NestedContributorSerializer(ModelSerializer):
     class Meta:
         model = Contributor
@@ -130,7 +150,7 @@ class ProjectSerializer(ModelSerializer):
 
 
 class IssueSerializer(ModelSerializer):
-    assigned_contributor = serializers.PrimaryKeyRelatedField(queryset=Contributor.objects.all())
+    assigned_contributor = ContributorField()
     author = SerializerMethodField()
     comments = SerializerMethodField()
 
@@ -145,8 +165,25 @@ class IssueSerializer(ModelSerializer):
             "priority",
             "label",
             "created_time",
-            "comments"
+            "comments",
         ]
+
+    # def get_assigned_contributor(self, value):
+    #     if isinstance(value, str):
+    #         try:
+    #             return Contributor.objects.get(user__username=value)
+    #         except Contributor.DoesNotExist:
+    #             raise serializers.ValidationError(f"Contributor with username {value} does not exist.")
+    #     elif isinstance(value, int):
+    #         try:
+    #             Contributor.objects.get(pk=value)
+    #             return value
+    #         except Contributor.DoesNotExist:
+    #             raise serializers.ValidationError(f"Contributor with ID {value} does not exist.")
+    #     else:
+    #         raise serializers.ValidationError(
+    #             "Invalid input type for 'assigned_contributor'. Expected username (str) or ID (int)."
+    #         )
 
     def get_assigned_contributor(self, obj):
         return NestedContributorSerializer(obj.assigned_contributor).data

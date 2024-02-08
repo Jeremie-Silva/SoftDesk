@@ -31,7 +31,6 @@ class ProjectPermissionsAPI(APITestCase):
         project_2 = Project.objects.create(
             id=88888, name="b", description="bbb", author=self.contributor_1
         )
-
         project_2.contributors.add(self.contributor_1)
 
         project_3 = Project.objects.create(
