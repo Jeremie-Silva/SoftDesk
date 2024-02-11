@@ -60,12 +60,12 @@ class CommentViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.action == "list":
-            return self.request.user.contributor.authored_comments.all()
+            user_contributor = self.request.user.contributor
+            project_ids = user_contributor.projects_contribution.values_list('id', flat=True)
+            project_comments = Comment.objects.filter(issue__project__id__in=project_ids).distinct()
+            return project_comments
         else:
             return Comment.objects.filter(id=self.kwargs.get("pk"))
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user.contributor)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
