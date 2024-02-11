@@ -195,3 +195,12 @@ class CommentSerializer(ModelSerializer):
 
     def get_author(self, obj):
         return NestedContributorSerializer(obj.author).data
+
+    def validate(self, attrs):
+        attrs["author"] = self.context["request"].user.contributor
+        if not attrs.get("issue"):
+            attrs["issue"] = Comment.objects.get(pk=self.context["view"].kwargs["pk"]).issue
+        if attrs["author"] not in attrs["issue"].project.contributors.all() \
+                and attrs["author"] != attrs["issue"].project.author:
+            raise PermissionDenied("You are not contributor or author of this project.")
+        return attrs
