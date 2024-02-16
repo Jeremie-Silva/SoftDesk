@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
-from .permissions import IsContributorOrOwner
+from .permissions import IsContributorOrOwner, IsOwnerOrReadOnly
 from .models import Contributor, Project, Issue, Comment
 from .serializers import ContributorSerializer, ProjectSerializer, \
     IssueSerializer, CommentSerializer
@@ -12,7 +12,13 @@ from .serializers import ContributorSerializer, ProjectSerializer, \
 class ContributorViewSet(ModelViewSet):
     queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
-    permission_classes = [IsAuthenticated, IsContributorOrOwner]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+
+    def get_queryset(self):
+        if self.action == "list":
+            return Contributor.objects.all()
+        else:
+            return Contributor.objects.filter(id=self.kwargs.get("pk"))
 
 
 class ProjectViewSet(ModelViewSet):

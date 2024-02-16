@@ -1,5 +1,0 @@
-Tests Contributor
-
-vérifier les models dans le swagger
-
-Feature : impossible de créer contributeur de moins de 16 ans

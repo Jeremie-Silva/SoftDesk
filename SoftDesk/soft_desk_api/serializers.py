@@ -1,7 +1,8 @@
+from django.contrib.auth.hashers import make_password
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.serializers import ModelSerializer, SerializerMethodField, PrimaryKeyRelatedField
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, PrimaryKeyRelatedField, CharField, ValidationError
 from .fields import ContributorField
-from .models import Contributor, Project, Issue, Comment
+from .models import Contributor, Project, Issue, Comment, User
 
 
 class NestedContributorSerializer(ModelSerializer):
@@ -65,41 +66,54 @@ class NestedCommentSerializer(ModelSerializer):
 
 
 class ContributorSerializer(ModelSerializer):
-    authored_projects = SerializerMethodField()
-    projects_contribution = SerializerMethodField()
-    assigned_issues = SerializerMethodField()
-    authored_issues = SerializerMethodField()
-    authored_comments = SerializerMethodField()
+    username = CharField(write_only=True)
+    password = CharField(write_only=True)
 
     class Meta:
         model = Contributor
         fields = [
             "id",
             "username",
+            "password",
             "age",
             "can_be_contacted",
             "can_data_be_shared",
-            "authored_projects",
-            "projects_contribution",
-            "assigned_issues",
-            "authored_issues",
-            "authored_comments"
+            "project_contributions",
+            "issue_contributions",
+            "comments",
         ]
 
-    def get_authored_projects(self, obj):
-        return NestedProjectSerializer(obj.authored_projects.all(), many=True).data
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists() and \
+                self.context["request"].user != User.objects.filter(username=value).first():
+            raise ValidationError("This username is already taken.")
+        return value
 
-    def get_projects_contribution(self, obj):
-        return NestedProjectSerializer(obj.projects_contribution.all(), many=True).data
+    def validate_age(self, value):
+        if value < 15:
+            raise ValidationError("You must have 16 years old, for use this application.")
+        return value
 
-    def get_assigned_issues(self, obj):
-        return NestedIssueSerializer(obj.assigned_issues.all(), many=True).data
+    def create(self, validated_data):
+        username = validated_data.pop("username")
+        password = validated_data.pop("password")
+        user = User.objects.create(
+            username=username, password=make_password(password)
+        )
+        return Contributor.objects.create(user=user, **validated_data)
 
-    def get_authored_issues(self, obj):
-        return NestedIssueSerializer(obj.authored_issues.all(), many=True).data
-
-    def get_authored_comments(self, obj):
-        return NestedCommentSerializer(obj.authored_comments.all(), many=True).data
+    def update(self, instance, validated_data):
+        if validated_data.get("username") is not None:
+            instance.user.username = validated_data.get("username")
+            instance.user.save()
+        if validated_data.get("password") is not None:
+            instance.user.password = make_password(validated_data.get("password"))
+            instance.user.save()
+        instance.age = validated_data.get("age", instance.age)
+        instance.can_be_contacted = validated_data.get("can_be_contacted", instance.can_be_contacted)
+        instance.can_data_be_shared = validated_data.get("can_data_be_shared", instance.can_data_be_shared)
+        instance.save()
+        return instance
 
 
 class ProjectSerializer(ModelSerializer):

@@ -14,3 +14,11 @@ class IsContributorOrOwner(BasePermission):
                 return request.user.contributor in obj.issue.project.contributors.all()
         else:
             return request.user.contributor == obj.author
+
+
+class IsOwnerOrReadOnly(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in SAFE_METHODS:
+            return True
+        else:
+            return obj.user == request.user
