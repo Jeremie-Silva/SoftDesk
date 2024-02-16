@@ -103,8 +103,8 @@ class ContributorAPI(APITestCase):
     def test_contributor_delete_obj(self):
         response: Response = self.client.delete(f'/api/Contributor/{self.contributor_1.id}/')
         self.assertEqual(response.status_code, 204)
-        response: Response = self.client.delete(f'/api/Contributor/{self.contributor_1.id}/')
-        self.assertEqual(response.status_code, 404)
+        self.assertIsNone(Contributor.objects.filter(pk=self.contributor_1.id).first())
+        self.assertIsNone(User.objects.filter(pk=self.contributor_1.user.id).first())
 
     def test_contributor_not_permitted(self):
         response: Response = self.client.patch(f'/api/Contributor/{self.contributor_2.id}/', {})
