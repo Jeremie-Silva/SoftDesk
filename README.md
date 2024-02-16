@@ -11,9 +11,6 @@ pour installer installer le projet
 ```bash
 git clone git@github.com:Jeremie-Silva/SoftDesk.git
 cd SoftDesk
-```
-
-```bash
 pipenv install
 pipenv shell
 ```
