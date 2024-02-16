@@ -20,7 +20,7 @@ pipenv shell
 lancer l'application en local :
 ```bash
 pipenv run SoftDesk/manage.py runserver
-google-chrome http://127.0.0.1:8000/
+google-chrome http://127.0.0.1:8000/api/ui
 ```
 lancer les tests en local :
 ```bash
