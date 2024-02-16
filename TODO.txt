@@ -1,4 +1,5 @@
-Améliorer le delete pour supprimer le User
+ajouter le username au get contributor
+
 
 Présentation :
 
