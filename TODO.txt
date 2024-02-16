@@ -1,3 +1,5 @@
+Améliorer le delete pour supprimer le User
+
 Présentation :
 
 -- Permissions
@@ -7,3 +9,8 @@ Présentation :
 -- Tests
     - TU
     - swagger-ui
+
+-- Approche "green code":
+    - pagination
+    - pas de gros upload
+    - code simple
