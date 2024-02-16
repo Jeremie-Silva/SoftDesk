@@ -1,6 +1,3 @@
-ajouter le username au get contributor
-
-
 Présentation :
 
 -- Permissions

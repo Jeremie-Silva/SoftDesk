@@ -66,7 +66,7 @@ class NestedCommentSerializer(ModelSerializer):
 
 
 class ContributorSerializer(ModelSerializer):
-    username = CharField(write_only=True)
+    username = CharField()
     password = CharField(write_only=True)
 
     class Meta:
