@@ -27,3 +27,7 @@ lancer l'application en local :
 python SoftDesk/manage.py runserver
 google-chrome http://127.0.0.1:8000/
 ```
+lancer les tests en local :
+```bash
+python SoftDesk/manage.py test soft_desk_api
+```
