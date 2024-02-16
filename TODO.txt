@@ -1,0 +1,9 @@
+Présentation :
+
+-- Permissions
+    - Authentification Json Web token (4 heures)
+    - Permissions par objects IsAuthenticated | IsContributorOrOwner | IsOwnerOrReadOnly
+
+-- Tests
+    - TU
+    - swagger-ui

@@ -14,20 +14,18 @@ cd SoftDesk
 ```
 
 ```bash
-virtualenv -p3.12 .venv
-source .venv/bin/activate
-pip install --upgrade setuptools
-pip install -r requirements.txt
+pipenv install
+pipenv shell
 ```
 
 <br/>
 
 lancer l'application en local :
 ```bash
-python SoftDesk/manage.py runserver
+pipenv run SoftDesk/manage.py runserver
 google-chrome http://127.0.0.1:8000/
 ```
 lancer les tests en local :
 ```bash
-python SoftDesk/manage.py test soft_desk_api
+pipenv run SoftDesk/manage.py test soft_desk_api
 ```
