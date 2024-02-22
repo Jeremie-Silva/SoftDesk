@@ -15,6 +15,11 @@ pipenv install
 pipenv shell
 ```
 
+Vous aurez peut-être besoin de cette commande :
+```
+export PIPENV_PYTHON=/usr/bin/python3.12
+```
+
 <br/>
 
 lancer l'application en local :
